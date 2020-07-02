@@ -16,6 +16,12 @@ public class MakePayment {
     private List<String> transactionListString = new ArrayList<String>();
     private List<String> accountListString = new ArrayList<String>();
     private boolean payDone = false;
+    private String transactionString;
+
+    public String getTransactionString() {
+        return transactionString;
+    }
+
 
     public boolean isPayDone() {
         return payDone;
@@ -76,7 +82,6 @@ public class MakePayment {
             newPay.setAmount(first.get().getAmount());
 
             //pay(creditor)
-            PaymentDTO newPay2 = new PaymentDTO();
             String inputDepositNumber2 = creditorDepositNumber;
             Optional<AccountDTO> first2 = accountList.stream()
                     .filter(x -> Objects.equals(inputDepositNumber2, x.getDepositNumber()))
@@ -86,31 +91,28 @@ public class MakePayment {
             if (first2.isPresent()) {
 
                 //System.out.println("found");
-                newPay2.setDeptorOrCreditor("creditor");
-                newPay2.setDepositNumber(inputDepositNumber2);
                 BigDecimal bigDecimal;
-                bigDecimal = amountPay;
+                bigDecimal = new BigDecimal(String.valueOf(amountPay));
 
                 if (!(accountList.get(accountList.indexOf(first.get())).getAmount().compareTo(bigDecimal) < 0)) {
+
                     accountList.get(accountList.indexOf(first.get())).setAmount(first.get().getAmount().subtract(bigDecimal));
                     accountList.get(accountList.indexOf(first2.get())).setAmount(first2.get().getAmount().add(bigDecimal));
-                    newPay2.setAmount(bigDecimal);
-
-                    //save deposit number that you want to pay(deptor) in to the pay list
-                    payListString.add(newPay.toString());
-
-                    //save transactions in to the transaction list list
                     TransactionDTO newTransaction = new TransactionDTO(first.get().getDepositNumber(), first2.get().getDepositNumber(), bigDecimal);
-                    transactionListString.add(newTransaction.toString());
-
-                    //save deposit number that give pay (creditor) in to the pay list
-                    payListString.add(newPay2.toString());
+                    transactionString = newTransaction.toString();
                     payDone = true;
+
                 } else {
 
                     throw new LowDepositAmount(deptorDepositNumber, creditorDepositNumber);
                 }
             }
         }
+        if (payDone) {
+            for (AccountDTO accounts : accountList) {
+                accountListString.add(accounts.toString());
+            }
+        }
     }
+
 }

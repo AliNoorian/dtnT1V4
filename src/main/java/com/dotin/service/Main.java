@@ -1,56 +1,53 @@
 package com.dotin.service;
 
 import com.dotin.beans.AccountDTO;
-import com.dotin.exception.LowDepositAmount;
+import com.dotin.beans.PaymentDTO;
 import com.dotin.model.LoadFile;
-import com.dotin.model.SaveFile;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        Random rand = new Random();
         LoadFile loadfile = new LoadFile();
         List<AccountDTO> accountList = loadfile.getAccountList();
-        List<String> payListString = new ArrayList<String>();
-        List<String> transactionListString = new ArrayList<String>();
-        List<String> accountListString = new ArrayList<String>();
-
-
+        List<PaymentDTO> payList = loadfile.getPaymentList();
 
         MakePayment makePayment = new MakePayment();
         makePayment.setAccountList(accountList);
 
+        int coreCpuCout = Runtime.getRuntime().availableProcessors();
+        ExecutorService service = Executors.newFixedThreadPool(coreCpuCout);
 
-        int payLoopLength = rand.nextInt(100);
-        for (int j = 0; j <= payLoopLength; j++) {
+        //get size of task for thread
+        int batchSize = (int) Math.ceil(payList.size() / coreCpuCout);
+        for (int i = 0; i < payList.size(); i++) {
+            if (payList.size() > coreCpuCout) {
 
-            String creditorDepositNumber = "1.20.100." + (rand.nextInt(200));
-            BigDecimal amountPay;
-            amountPay = new BigDecimal(rand.nextInt(100));
+                for (int j = 0; j < batchSize; j++) {
+                    if (payList.size() > batchSize * i + j) {
 
-            makePayment.doPay("1.10.100.1", creditorDepositNumber, amountPay);
+                        if (payList.get(batchSize * i + j).getDeptorOrCreditor().equals("creditor")) {
 
-        }
+                            service.execute(new PaymentThread("1.10.100.1"
+                                    , payList.get(batchSize * i + j).getDepositNumber()
+                                    , payList.get(batchSize * i + j).getAmount()));
+                        }
+                    }
+                }
+            } else {
 
+                if (payList.get(i).getDeptorOrCreditor().equals("creditor")) {
 
-        if (makePayment.isPayDone()) {
-
-            for (AccountDTO accounts : accountList) {
-                accountListString.add(accounts.toString());
+                    service.execute(new PaymentThread("1.10.100.1"
+                            , payList.get(i).getDepositNumber()
+                            , payList.get(i).getAmount()));
+                }
             }
-            SaveFile saveFile = new SaveFile();
-            saveFile.setSaveFile("account", accountListString);
-            saveFile.setSaveFile("pay", makePayment.getPayListString());
-            saveFile.setSaveFile("transaction", makePayment.getTransactionListString());
         }
-
-
+        service.shutdown();
     }
 }
