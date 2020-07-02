@@ -13,11 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         LoadFile loadfile = new LoadFile();
-        List<AccountDTO> accountList = loadfile.getAccountList();
         List<PaymentDTO> payList = loadfile.getPaymentList();
-
-        MakePayment makePayment = new MakePayment();
-        makePayment.setAccountList(accountList);
 
         int coreCpuCout = Runtime.getRuntime().availableProcessors();
         ExecutorService service = Executors.newFixedThreadPool(coreCpuCout);
@@ -26,10 +22,8 @@ public class Main {
         int batchSize = (int) Math.ceil(payList.size() / coreCpuCout);
         for (int i = 0; i < payList.size(); i++) {
             if (payList.size() > coreCpuCout) {
-
                 for (int j = 0; j < batchSize; j++) {
                     if (payList.size() > batchSize * i + j) {
-
                         if (payList.get(batchSize * i + j).getDeptorOrCreditor().equals("creditor")) {
 
                             service.execute(new PaymentThread("1.10.100.1"
@@ -45,9 +39,14 @@ public class Main {
                     service.execute(new PaymentThread("1.10.100.1"
                             , payList.get(i).getDepositNumber()
                             , payList.get(i).getAmount()));
+
                 }
             }
         }
         service.shutdown();
+
+
+
+
     }
 }
