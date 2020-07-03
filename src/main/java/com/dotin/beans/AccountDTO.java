@@ -38,7 +38,7 @@ public class AccountDTO implements Serializable {
 
     @Override
     public String toString() {
-        return DepositNumber + "\t" + amount + "\n";
+        return DepositNumber + "\t" + amount +"\n";
     }
 
 }

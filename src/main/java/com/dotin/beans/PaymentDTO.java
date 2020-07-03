@@ -48,6 +48,6 @@ public class PaymentDTO implements Serializable {
 
     @Override
     public String toString() {
-        return deptorOrCreditor + "\t" + depositNumber + "\t" + amount + "\n";
+        return deptorOrCreditor + "\t" + depositNumber + "\t" + amount ;
     }
 }

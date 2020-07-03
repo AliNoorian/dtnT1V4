@@ -4,7 +4,6 @@ import com.dotin.beans.AccountDTO;
 import com.dotin.beans.PaymentDTO;
 import com.dotin.beans.TransactionDTO;
 import com.dotin.exception.LowDepositAmount;
-import com.dotin.model.LoadFile;
 import com.dotin.model.SaveFile;
 
 import java.io.IOException;
@@ -14,59 +13,52 @@ import java.util.*;
 public class MakePayment {
 
 
-    SaveFile saveFile= new SaveFile();
-    private List<AccountDTO> accountList ;
-    private List<String> payListString = new ArrayList<String>();
-    private List<String> transactionListString = new ArrayList<String>();
-    private List<String> accountListString = new ArrayList<String>();
 
 
-    public void setPayDone(boolean payDone) {
-        this.payDone = payDone;
+    private List<String>accountListStrings= new ArrayList<String>();
+    private List<AccountDTO> accountList;
+    private String transactionString;
+    private String updateDeptorAccountString;
+    private String updateCreditorAccountString;
+    private boolean payDone = false;
+
+
+
+
+    public MakePayment(List<AccountDTO> accountList) throws IOException {
+
+        this.accountList = accountList;
+
     }
 
-    private boolean payDone = false;
-    private String transactionString;
+    public List<String> getAccountListStrings() {
+        return accountListStrings;
+    }
 
-    public MakePayment() throws IOException {
+    public String getUpdateDeptorAccountString() {
+        return updateDeptorAccountString;
+    }
+
+    public String getUpdateCreditorAccountString() {
+        return updateCreditorAccountString;
     }
 
     public String getTransactionString() {
         return transactionString;
     }
 
-
     public boolean isPayDone() {
         return payDone;
-    }
-
-
-    public List<String> getTransactionListString() {
-        return transactionListString;
-    }
-
-    public void setTransactionListString(List<String> transactionListString) {
-        this.transactionListString = transactionListString;
-    }
-
-    public List<String> getAccountListString() {
-        return accountListString;
-    }
-
-    public void setAccountListString(List<String> accountListString) {
-        this.accountListString = accountListString;
     }
 
     public List<AccountDTO> getAccountList() {
         return accountList;
     }
 
-    public void setAccountList(List<AccountDTO> accountList) {
-        this.accountList = accountList;
-    }
 
 
-    public void doPay(String deptorDepositNumber, String creditorDepositNumber, BigDecimal amountPay) throws LowDepositAmount, IOException {
+
+    public void doPay(List<AccountDTO> accountList, String deptorDepositNumber, String creditorDepositNumber, BigDecimal amountPay) throws LowDepositAmount, IOException {
 
         String inputDepositNumber = deptorDepositNumber;
 
@@ -80,20 +72,20 @@ public class MakePayment {
             //pay(deptor)
             PaymentDTO newPay = new PaymentDTO();
             newPay.setDeptorOrCreditor("debtor");
-            newPay.setDepositNumber(deptorDepositNumber);
+            newPay.setDepositNumber(inputDepositNumber);
             newPay.setAmount(first.get().getAmount());
 
             //pay(creditor)
             String inputDepositNumber2 = creditorDepositNumber;
             Optional<AccountDTO> first2 = accountList.stream()
-                    .filter(x -> Objects.equals(inputDepositNumber2, x.getDepositNumber()))
+                    .filter(x -> Objects.equals(creditorDepositNumber, x.getDepositNumber()))
                     .findFirst();
 
             //find account(creditor) in account
             if (first2.isPresent()) {
                 //System.out.println("found");
                 BigDecimal bigDecimal;
-                bigDecimal = new BigDecimal(String.valueOf(amountPay));
+                bigDecimal = new BigDecimal(amountPay.toString());
 
                 if (!(accountList.get(accountList.indexOf(first.get())).getAmount().compareTo(bigDecimal) < 0)) {
 
@@ -102,8 +94,17 @@ public class MakePayment {
                     TransactionDTO newTransaction = new TransactionDTO(first.get().getDepositNumber(), first2.get().getDepositNumber(), bigDecimal);
                     transactionString = newTransaction.toString();
 
-                    System.out.println(creditorDepositNumber);
+                    AccountDTO updateAccount = new AccountDTO((first.get().getDepositNumber()), first.get().getAmount());
+                    updateDeptorAccountString = updateAccount.toString();
+                    AccountDTO updateAccount2 = new AccountDTO((first2.get().getDepositNumber()), first2.get().getAmount());
+                    updateCreditorAccountString = updateAccount2.toString();
 
+                    for (AccountDTO accounts : accountList) {
+                        accountListStrings.add(accounts.toString());
+
+                    }
+
+                    System.out.println(creditorDepositNumber);
 
 
                     payDone = true;
@@ -114,4 +115,6 @@ public class MakePayment {
             }
         }
     }
+
+
 }

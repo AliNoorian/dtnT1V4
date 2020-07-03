@@ -50,6 +50,6 @@ public class TransactionDTO implements Serializable {
 
     @Override
     public String toString() {
-        return debtorDepositNumber + "\t" + creditorDepositNumber + "\t" + amount + "\n";
+        return debtorDepositNumber + "\t" + creditorDepositNumber + "\t" + amount ;
     }
 }
