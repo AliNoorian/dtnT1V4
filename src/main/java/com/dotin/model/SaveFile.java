@@ -9,7 +9,7 @@ public class SaveFile {
     }
 
     public void setSaveFile(String fileName, List<String> listName) throws IOException {
-        File fileDir = new File(fileName + ".txt");
+        File fileDir = new File("Program Files\\"+fileName + ".txt");
         Writer out = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(fileDir), "UTF8"));
         PrintWriter pw = new PrintWriter(out);
@@ -21,7 +21,7 @@ public class SaveFile {
         pw.close();
     }
     public void setSaveFileWithAppend(String fileName, String stringData) throws IOException {
-        File fileDir = new File(fileName + ".txt");
+        File fileDir = new File("Program Files\\"+fileName + ".txt");
         FileWriter fr = new FileWriter(fileDir, true);
         BufferedWriter br = new BufferedWriter(fr);
         PrintWriter pr = new PrintWriter(br);

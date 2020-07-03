@@ -104,8 +104,6 @@ public class MakePayment {
 
                     }
 
-                    System.out.println(creditorDepositNumber);
-
 
                     payDone = true;
                 } else {

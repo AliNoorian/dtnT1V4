@@ -23,7 +23,7 @@ public class LoadFile {
         try {
 
 
-            File fileDir = new File("account.txt");
+            File fileDir = new File("Program Files\\account.txt");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
                             new FileInputStream(fileDir), StandardCharsets.UTF_8));
@@ -89,7 +89,7 @@ public class LoadFile {
         try {
 
 
-            File fileDir = new File("pay.txt");
+            File fileDir = new File("Program Files\\pay.txt");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
                             new FileInputStream(fileDir), StandardCharsets.UTF_8));
