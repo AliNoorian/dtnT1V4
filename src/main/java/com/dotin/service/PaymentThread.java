@@ -1,74 +1,62 @@
 package com.dotin.service;
 
 import com.dotin.beans.AccountDTO;
-import com.dotin.exception.LowDepositAmount;
-import com.dotin.model.LoadFile;
 import com.dotin.model.SaveFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class PaymentThread implements Runnable {
 
-    LoadFile loadfile = new LoadFile();
     SaveFile saveFile = new SaveFile();
-    List<AccountDTO> accountList2 =loadfile.getAccountList();
-    private List<AccountDTO> accountlist=accountList2;
-    MakePayment makePayment = new MakePayment(accountlist);
-
-    private String deptorDepositNumbert;
-    private String creditorDepositNumber;
-    private BigDecimal amount;
-    private CountDownLatch latch;
 
 
-    List<String> accountListString = new ArrayList<String>();
+    private final String deptorDepositNumbert;
+    private final String creditorDepositNumber;
+    private final BigDecimal amount;
+    private final CountDownLatch latch;
+    List<AccountDTO> accountList;
 
-    public PaymentThread(List<AccountDTO> accountlist,String deptorDepositNumbert
+
+    public PaymentThread(List<AccountDTO> accountList, String deptorDepositNumbert
             , String creditorDepositNumber
             , BigDecimal amount
-            ,CountDownLatch latch) throws IOException {
-        this.accountlist=accountlist;
+            , CountDownLatch latch) {
         this.deptorDepositNumbert = deptorDepositNumbert;
         this.creditorDepositNumber = creditorDepositNumber;
         this.amount = amount;
         this.latch = latch;
+        this.accountList = accountList;
     }
-
 
 
     @Override
     public void run() {
+        MakePayment makePayment = new MakePayment();
 
 
         try {
 
-            makePayment.doPay(accountlist,deptorDepositNumbert
+            makePayment.doPay(accountList, deptorDepositNumbert
                     , creditorDepositNumber,
                     amount);
 
-            if (makePayment.isPayDone()) {
+            if (makePayment.isPayCanDone()) {
 
-                accountlist = makePayment.getAccountList();
-                saveFile.setSaveFile("account", makePayment.getAccountListStrings());
                 saveFile.setSaveFileWithAppend("transaction", makePayment.getTransactionString());
+//                saveFile.setSaveFileWithAppend("accounts", accountlist.get(makePayment.getUpdateCreditorAccount()).toString());
+
 
             }
 
 
-
-
-        } catch (IOException | LowDepositAmount lowDepositAmount) {
+        } catch (IOException lowDepositAmount) {
             lowDepositAmount.printStackTrace();
         } finally {
+
             latch.countDown();
         }
-
     }
-
-
 }

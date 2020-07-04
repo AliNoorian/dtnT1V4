@@ -13,13 +13,6 @@ public class PaymentDTO implements Serializable {
 
     }
 
-    public PaymentDTO(String deptorOrCreditor, String depositNumber, BigDecimal amount) {
-        this.deptorOrCreditor = deptorOrCreditor;
-        this.depositNumber = depositNumber;
-        this.amount = amount;
-
-    }
-
     public String getDeptorOrCreditor() {
         return deptorOrCreditor;
     }
@@ -48,6 +41,6 @@ public class PaymentDTO implements Serializable {
 
     @Override
     public String toString() {
-        return deptorOrCreditor + "\t" + depositNumber + "\t" + amount +"\n";
+        return deptorOrCreditor + "\t" + depositNumber + "\t" + amount ;
     }
 }

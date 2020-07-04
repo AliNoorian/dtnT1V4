@@ -2,10 +2,9 @@
   <artifact type="jar" build-on-make="true" name="dtnTask1-v4:jar">
     <output-path>$PROJECT_DIR$/target</output-path>
     <root id="archive" name="dtnTask1-v4.jar">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/META-INF/MANIFEST.MF" />
-      </element>
       <element id="module-output" name="dtnTask1-v4" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/log4j/log4j/1.2.17/log4j-1.2.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

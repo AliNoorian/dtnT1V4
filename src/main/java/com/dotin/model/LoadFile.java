@@ -2,7 +2,6 @@ package com.dotin.model;
 
 import com.dotin.beans.AccountDTO;
 import com.dotin.beans.PaymentDTO;
-import com.dotin.exception.CanNotSaveFile;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -53,22 +52,20 @@ public class LoadFile {
             BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(9000) + 1000));
             newAccount2.setAmount(bigDecimal2);
             accountList.add(newAccount2);
-            accountListString.add(newAccount2.toString());
+            accountListString.add(newAccount2.toString()+"\n");
 
             int accountLoopLength = (rand.nextInt(100));
             for (int i = 0; i <= accountLoopLength; i++) {
                 String randomDepositNumber2 = "1.20.100." + (rand.nextInt(200));
                 Optional<AccountDTO> first = accountList.stream()
-                        .filter(x -> {
-                            return Objects.equals(randomDepositNumber2, x.getDepositNumber());
-                        })
+                        .filter(x -> Objects.equals(randomDepositNumber2, x.getDepositNumber()))
                         .findFirst();
                 if (!(first.isPresent())) {
                     newAccount.setDepositNumber(randomDepositNumber2);
                     BigDecimal bigDecimal = new BigDecimal((rand.nextInt(50)));
                     newAccount.setAmount(bigDecimal);
                     accountList.add(newAccount);
-                    accountListString.add(newAccount.toString());
+                    accountListString.add(newAccount.toString()+"\n");
                 }
             }
 
@@ -81,7 +78,7 @@ public class LoadFile {
 
     }
 
-    public List<PaymentDTO> getPaymentList() throws CanNotSaveFile, IOException {
+    public List<PaymentDTO> getPaymentList() throws IOException {
         List<PaymentDTO> paymentList = new ArrayList<>();
         List<String> paymentListString = new ArrayList<>();
         String[] paymentString;
@@ -121,15 +118,13 @@ public class LoadFile {
             BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(9000) + 1000));
             newPayment2.setAmount(bigDecimal2);
             paymentList.add(newPayment2);
-            paymentListString.add(newPayment2.toString());
+            paymentListString.add(newPayment2.toString()+"\n");
 
             int accountLoopLength = (rand.nextInt(20));
             for (int i = 0; i <= accountLoopLength; i++) {
                 String randomPayDepositNumber = "1.20.100." + (rand.nextInt(200));
                 Optional<PaymentDTO> first = paymentList.stream()
-                        .filter(x -> {
-                            return Objects.equals(randomPayDepositNumber, x.getDepositNumber());
-                        })
+                        .filter(x -> Objects.equals(randomPayDepositNumber, x.getDepositNumber()))
                         .findFirst();
                 if (!(first.isPresent())) {
                     newPayment.setDeptorOrCreditor("creditor");
@@ -137,7 +132,7 @@ public class LoadFile {
                     BigDecimal bigDecimal = new BigDecimal((rand.nextInt(50)));
                     newPayment.setAmount(bigDecimal);
                     paymentList.add(newPayment);
-                    paymentListString.add(newPayment.toString());
+                    paymentListString.add(newPayment.toString()+"\n");
                 }
             }
 

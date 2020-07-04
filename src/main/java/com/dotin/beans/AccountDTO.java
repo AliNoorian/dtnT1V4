@@ -12,11 +12,7 @@ public class AccountDTO implements Serializable {
 
     }
 
-    public AccountDTO(String DepositNumber, BigDecimal amount) {
-        this.DepositNumber = DepositNumber;
-        this.amount = amount;
 
-    }
 
     public String getDepositNumber() {
 
@@ -38,7 +34,7 @@ public class AccountDTO implements Serializable {
 
     @Override
     public String toString() {
-        return DepositNumber + "\t" + amount +"\n";
+        return DepositNumber + "\t" + amount ;
     }
 
 }
