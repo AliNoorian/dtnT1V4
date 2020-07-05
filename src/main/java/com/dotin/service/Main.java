@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -31,6 +32,7 @@ public class Main {
             int batchSize = ((int) Math.ceil(payList.size() / coreCpuCout));
             CountDownLatch minlatch = new CountDownLatch(payList.size() - 1);
             CountDownLatch batchlatch = new CountDownLatch(batchSize);
+            System.out.println("Proccess start!!!");
 
             for (int i = 0; i < payList.size(); i++) {
                 if (payList.size() > coreCpuCout) {
@@ -42,6 +44,8 @@ public class Main {
                                         , payList.get(0).getDepositNumber()
                                         , payList.get(batchSize * i + j).getDepositNumber()
                                         , payList.get(batchSize * i + j).getAmount(), batchlatch));
+
+                                batchlatch.await(100,TimeUnit.MILLISECONDS);
                             }
                         }
                     }
@@ -54,11 +58,12 @@ public class Main {
                                 , payList.get(i).getDepositNumber()
                                 , payList.get(i).getAmount(), minlatch));
 
+                        minlatch.await(100,TimeUnit.MILLISECONDS);
                     }
                 }
 
             }
-
+            System.out.println("Proccess finished!!!");
             service.shutdown();
 
 

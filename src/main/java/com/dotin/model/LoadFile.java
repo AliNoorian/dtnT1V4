@@ -14,7 +14,7 @@ public class LoadFile {
     }
 
 
-    public List<AccountDTO> getAccountList() throws IOException {
+    public synchronized List<AccountDTO> getAccountList() throws IOException {
         List<AccountDTO> accountList = new ArrayList<>();
         List<String> accountListString = new ArrayList<>();
         String[] accountString;
@@ -78,7 +78,7 @@ public class LoadFile {
 
     }
 
-    public List<PaymentDTO> getPaymentList() throws IOException {
+    public synchronized List<PaymentDTO> getPaymentList() throws IOException {
         List<PaymentDTO> paymentList = new ArrayList<>();
         List<String> paymentListString = new ArrayList<>();
         String[] paymentString;
