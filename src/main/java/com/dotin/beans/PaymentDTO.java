@@ -13,34 +13,34 @@ public class PaymentDTO implements Serializable {
 
     }
 
-    public String getDeptorOrCreditor() {
+    public synchronized String getDeptorOrCreditor() {
         return deptorOrCreditor;
     }
 
-    public String getDepositNumber() {
+    public synchronized String getDepositNumber() {
         return depositNumber;
     }
 
-    public BigDecimal getAmount() {
+    public synchronized BigDecimal getAmount() {
         return amount;
     }
 
 
-    public void setAmount(BigDecimal amount) {
+    public synchronized void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public void setDepositNumber(String depositNumber) {
+    public synchronized void setDepositNumber(String depositNumber) {
         this.depositNumber = depositNumber;
     }
 
-    public void setDeptorOrCreditor(String deptorOrCreditor) {
+    public synchronized void setDeptorOrCreditor(String deptorOrCreditor) {
         this.deptorOrCreditor = deptorOrCreditor;
     }
 
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return deptorOrCreditor + "\t" + depositNumber + "\t" + amount ;
     }
 }

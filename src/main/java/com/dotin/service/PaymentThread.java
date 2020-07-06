@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+
 
 public class PaymentThread implements Runnable {
 
@@ -54,11 +54,7 @@ public class PaymentThread implements Runnable {
         } catch (IOException lowDepositAmount) {
             lowDepositAmount.printStackTrace();
         } finally {
-            try {
-                latch.await(100, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             latch.countDown();
         }
     }

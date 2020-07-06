@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MakePayment {
+public  class MakePayment {
 
 
     private final List<String> accountListStrings = new ArrayList<>();
@@ -31,11 +31,11 @@ public class MakePayment {
 
     }
 
-    public String getTransactionString() {
+    public synchronized String getTransactionString() {
         return transactionString;
     }
 
-    public boolean isPayCanDone() {
+    public synchronized boolean isPayCanDone() {
         return payCanDone;
     }
 
@@ -58,7 +58,7 @@ public class MakePayment {
 
 
             if (first2.isPresent()) {
-                //System.out.println("found");
+
                 if (!(accountList.get(accountList.indexOf(first.get())).getAmount().compareTo(amountPay) < 0)) {
                     accountList.get(accountList.indexOf(first.get())).setAmount(first.get().getAmount().subtract(amountPay));
                     accountList.get(accountList.indexOf(first2.get())).setAmount(first2.get().getAmount().add(amountPay));

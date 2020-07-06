@@ -45,7 +45,7 @@ public class Main {
                                         , payList.get(batchSize * i + j).getDepositNumber()
                                         , payList.get(batchSize * i + j).getAmount(), batchlatch));
 
-                                batchlatch.await(100,TimeUnit.MILLISECONDS);
+                                batchlatch.await(300,TimeUnit.MILLISECONDS);
                             }
                         }
                     }
@@ -58,7 +58,7 @@ public class Main {
                                 , payList.get(i).getDepositNumber()
                                 , payList.get(i).getAmount(), minlatch));
 
-                        minlatch.await(100,TimeUnit.MILLISECONDS);
+                        minlatch.await(300,TimeUnit.MILLISECONDS);
                     }
                 }
 

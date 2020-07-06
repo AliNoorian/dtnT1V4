@@ -20,7 +20,7 @@ public class TransactionDTO implements Serializable {
 
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return debtorDepositNumber + "\t" + creditorDepositNumber + "\t" + amount ;
     }
 }
