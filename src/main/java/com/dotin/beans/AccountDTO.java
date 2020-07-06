@@ -14,26 +14,26 @@ public class AccountDTO implements Serializable {
 
 
 
-    public synchronized String getDepositNumber() {
+    public  String getDepositNumber() {
 
         return DepositNumber;
     }
 
-    public synchronized BigDecimal getAmount() {
+    public  BigDecimal getAmount() {
         return amount;
     }
 
 
-    public synchronized void setAmount(BigDecimal amount) {
+    public  void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public synchronized void setDepositNumber(String DepositNumber) {
+    public  void setDepositNumber(String DepositNumber) {
         this.DepositNumber = DepositNumber;
     }
 
     @Override
-    public synchronized String toString() {
+    public  String toString() {
         return DepositNumber + "\t" + amount ;
     }
 

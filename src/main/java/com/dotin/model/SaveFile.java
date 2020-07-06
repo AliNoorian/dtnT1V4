@@ -3,6 +3,7 @@ package com.dotin.model;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Scanner;
 
 public class SaveFile {
 
@@ -10,7 +11,7 @@ public class SaveFile {
     }
 
     public synchronized void setSaveFile(String fileName, List<String> listName) throws IOException {
-        File fileDir = new File("Program Files\\"+fileName + ".txt");
+        File fileDir = new File("Program Files\\" + fileName + ".txt");
         Writer out = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(fileDir), StandardCharsets.UTF_8));
         PrintWriter pw = new PrintWriter(out);
@@ -21,8 +22,9 @@ public class SaveFile {
         pw.flush();
         pw.close();
     }
+
     public synchronized void setSaveFileWithAppend(String fileName, String stringData) throws IOException {
-        File fileDir = new File("Program Files\\"+fileName + ".txt");
+        File fileDir = new File("Program Files\\" + fileName + ".txt");
         FileWriter fr = new FileWriter(fileDir, true);
         BufferedWriter br = new BufferedWriter(fr);
         PrintWriter pr = new PrintWriter(br);
@@ -30,5 +32,15 @@ public class SaveFile {
         pr.close();
         br.close();
         fr.close();
+    }
+
+    public synchronized void writeAccountFile(String fileContents) throws IOException {
+
+        String filePath = "Program Files\\account.txt";
+        FileWriter writer = new FileWriter(filePath);
+        writer.append(fileContents);
+        writer.flush();
+        writer.close();
+
     }
 }

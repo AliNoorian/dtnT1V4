@@ -1,17 +1,14 @@
 package com.dotin.service;
 
-import com.dotin.beans.AccountDTO;
 import com.dotin.beans.PaymentDTO;
 import com.dotin.exception.CanNotOpenFile;
 import com.dotin.model.LoadFile;
+import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.log4j.Logger;
 
 public class Main {
     public static final Logger logger = Logger.getLogger(Main.class);
@@ -20,10 +17,13 @@ public class Main {
 
         try {
             LoadFile loadfile = new LoadFile();
-
+            if (loadfile.getAccountList().isEmpty()) {
+                loadfile.getAccountList();
+            }
+            if (loadfile.getPaymentList().isEmpty()) {
+                loadfile.getPaymentList();
+            }
             List<PaymentDTO> payList = loadfile.getPaymentList();
-            List<AccountDTO> accountLists = loadfile.getAccountList();
-            List<AccountDTO> synchronizedAccountList = Collections.synchronizedList(accountLists);
 
             int coreCpuCout = Runtime.getRuntime().availableProcessors();
             ExecutorService service = Executors.newFixedThreadPool(coreCpuCout);
@@ -40,12 +40,11 @@ public class Main {
                         if (payList.size() > batchSize * i + j) {
                             if (payList.get(batchSize * i + j).getDeptorOrCreditor().equals("creditor")) {
 
-                                service.execute(new PaymentThread(synchronizedAccountList
-                                        , payList.get(0).getDepositNumber()
+                                service.execute(new PaymentThread(payList.get(0).getDepositNumber()
                                         , payList.get(batchSize * i + j).getDepositNumber()
                                         , payList.get(batchSize * i + j).getAmount(), batchlatch));
 
-                                batchlatch.await(300,TimeUnit.MILLISECONDS);
+
                             }
                         }
                     }
@@ -53,12 +52,11 @@ public class Main {
 
                     if (payList.get(i).getDeptorOrCreditor().equals("creditor")) {
 
-                        service.execute(new PaymentThread(synchronizedAccountList
-                                , payList.get(0).getDepositNumber()
+                        service.execute(new PaymentThread(payList.get(0).getDepositNumber()
                                 , payList.get(i).getDepositNumber()
                                 , payList.get(i).getAmount(), minlatch));
 
-                        minlatch.await(300,TimeUnit.MILLISECONDS);
+
                     }
                 }
 

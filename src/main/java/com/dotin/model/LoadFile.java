@@ -2,6 +2,7 @@ package com.dotin.model;
 
 import com.dotin.beans.AccountDTO;
 import com.dotin.beans.PaymentDTO;
+
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +44,7 @@ public class LoadFile {
 
         } catch (Throwable t) {
 
-
+            ArrayList<Integer> numbers = new ArrayList<>();
             AccountDTO newAccount = new AccountDTO();
             AccountDTO newAccount2 = new AccountDTO();
 
@@ -52,11 +53,18 @@ public class LoadFile {
             BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(9000) + 1000));
             newAccount2.setAmount(bigDecimal2);
             accountList.add(newAccount2);
-            accountListString.add(newAccount2.toString()+"\n");
+            accountListString.add(newAccount2.toString() + "\n");
+
+            int number = (rand.nextInt(200));
+            numbers.add(number);
 
             int accountLoopLength = (rand.nextInt(100));
             for (int i = 0; i <= accountLoopLength; i++) {
-                String randomDepositNumber2 = "1.20.100." + (rand.nextInt(200));
+                do {
+                    number = (rand.nextInt(200));
+                } while (numbers.contains(number));
+                numbers.add(number);
+                String randomDepositNumber2 = "1.20.100." + number;
                 Optional<AccountDTO> first = accountList.stream()
                         .filter(x -> Objects.equals(randomDepositNumber2, x.getDepositNumber()))
                         .findFirst();
@@ -65,7 +73,7 @@ public class LoadFile {
                     BigDecimal bigDecimal = new BigDecimal((rand.nextInt(50)));
                     newAccount.setAmount(bigDecimal);
                     accountList.add(newAccount);
-                    accountListString.add(newAccount.toString()+"\n");
+                    accountListString.add(newAccount.toString() + "\n");
                 }
             }
 
@@ -108,7 +116,7 @@ public class LoadFile {
 
         } catch (Throwable t) {
 
-
+            ArrayList<Integer> numbers2 = new ArrayList<>();
             PaymentDTO newPayment = new PaymentDTO();
             PaymentDTO newPayment2 = new PaymentDTO();
 
@@ -118,21 +126,30 @@ public class LoadFile {
             BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(9000) + 1000));
             newPayment2.setAmount(bigDecimal2);
             paymentList.add(newPayment2);
-            paymentListString.add(newPayment2.toString()+"\n");
+            paymentListString.add(newPayment2.toString() + "\n");
+
+            int number2 = (rand.nextInt(200));
+            numbers2.add(number2);
 
             int accountLoopLength = (rand.nextInt(20));
             for (int i = 0; i <= accountLoopLength; i++) {
-                String randomPayDepositNumber = "1.20.100." + (rand.nextInt(200));
+
+                do {
+                    number2 = (rand.nextInt(200));
+                } while (numbers2.contains(number2));
+                numbers2.add(number2);
+                String randomPayDepositNumber = "1.20.100." + number2;
+
                 Optional<PaymentDTO> first = paymentList.stream()
                         .filter(x -> Objects.equals(randomPayDepositNumber, x.getDepositNumber()))
                         .findFirst();
                 if (!(first.isPresent())) {
                     newPayment.setDeptorOrCreditor("creditor");
                     newPayment.setDepositNumber(randomPayDepositNumber);
-                    BigDecimal bigDecimal = new BigDecimal((rand.nextInt(50)));
+                    BigDecimal bigDecimal = new BigDecimal((rand.nextInt(40) + 10));
                     newPayment.setAmount(bigDecimal);
                     paymentList.add(newPayment);
-                    paymentListString.add(newPayment.toString()+"\n");
+                    paymentListString.add(newPayment.toString() + "\n");
                 }
             }
 
@@ -142,6 +159,19 @@ public class LoadFile {
 
         }
 
+    }
+
+    public synchronized String readAccountFile() throws FileNotFoundException {
+
+        String filePath = "Program Files\\account.txt";
+        Scanner sc = new Scanner(new File(filePath));
+        StringBuilder buffer = new StringBuilder();
+        while (sc.hasNextLine()) {
+            buffer.append(sc.nextLine()).append(System.lineSeparator());
+        }
+        String s = buffer.toString();
+        sc.close();
+        return s;
     }
 }
 

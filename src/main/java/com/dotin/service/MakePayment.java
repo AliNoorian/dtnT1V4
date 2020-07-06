@@ -3,46 +3,30 @@ package com.dotin.service;
 import com.dotin.beans.AccountDTO;
 import com.dotin.beans.TransactionDTO;
 import com.dotin.exception.LowDepositAmount;
+import com.dotin.model.LoadFile;
 import com.dotin.model.SaveFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public  class MakePayment {
+public class MakePayment {
 
 
-    private final List<String> accountListStrings = new ArrayList<>();
-    private String transactionString;
-
-
-
-
-
-
-
-    private boolean payCanDone = false;
+    LoadFile loadfile = new LoadFile();
 
 
     public MakePayment() {
 
     }
 
-    public synchronized String getTransactionString() {
-        return transactionString;
-    }
 
-    public synchronized boolean isPayCanDone() {
-        return payCanDone;
-    }
+    public synchronized void doPay(String deptorDepositNumber, String creditorDepositNumber, BigDecimal amountPay) throws IOException {
 
-
-
-    public synchronized void doPay(List<AccountDTO> accountList, String deptorDepositNumber, String creditorDepositNumber, BigDecimal amountPay) throws IOException {
-
+        List<AccountDTO> accountList = loadfile.getAccountList();
+        String fileContents = loadfile.readAccountFile();
         Optional<AccountDTO> first = accountList.stream()
                 .filter(x -> Objects.equals(deptorDepositNumber, x.getDepositNumber()))
                 .findFirst();
@@ -60,19 +44,30 @@ public  class MakePayment {
             if (first2.isPresent()) {
 
                 if (!(accountList.get(accountList.indexOf(first.get())).getAmount().compareTo(amountPay) < 0)) {
-                    accountList.get(accountList.indexOf(first.get())).setAmount(first.get().getAmount().subtract(amountPay));
-                    accountList.get(accountList.indexOf(first2.get())).setAmount(first2.get().getAmount().add(amountPay));
+
+                    AccountDTO updateAccountDebtor;
+                    updateAccountDebtor = accountList.get(accountList.indexOf(first.get()));
+                    updateAccountDebtor.setAmount(updateAccountDebtor.getAmount().subtract(amountPay));
+                    fileContents.replaceAll(
+                            accountList.get(accountList.indexOf(first.get())).toString()
+                            , updateAccountDebtor.toString());
+                    System.out.println(updateAccountDebtor.toString());
+                    AccountDTO updateAccountCreditor;
+                    updateAccountCreditor = accountList.get(accountList.indexOf(first2.get()));
+                    updateAccountCreditor.setAmount(updateAccountCreditor.getAmount().add(amountPay));
+                    fileContents.replaceAll(
+                            accountList.get(accountList.indexOf(first2.get())).toString()
+                            , updateAccountCreditor.toString());
+
+                    System.out.println(updateAccountCreditor.toString());
 
                     TransactionDTO newTransaction = new TransactionDTO(first.get().getDepositNumber(), first2.get().getDepositNumber(), amountPay);
-                    transactionString = newTransaction.toString();
+                    String transactionString = newTransaction.toString();
 
-                    for (AccountDTO accounts : accountList) {
-                        accountListStrings.add(accounts.toString()+"\n");
-                    }
+
                     SaveFile saveFile = new SaveFile();
-                    saveFile.setSaveFile("account",accountListStrings);
-
-                    payCanDone = true;
+                    saveFile.writeAccountFile(fileContents);
+                    saveFile.setSaveFileWithAppend("transaction", transactionString);
                 } else {
 
                     throw new LowDepositAmount(deptorDepositNumber, creditorDepositNumber);
@@ -81,7 +76,6 @@ public  class MakePayment {
         }
 
     }
-
 
 
 }
