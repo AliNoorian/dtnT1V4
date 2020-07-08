@@ -3,14 +3,13 @@ package com.dotin.model;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Scanner;
 
 public class SaveFile {
 
     public SaveFile() {
     }
 
-    public synchronized void setSaveFile(String fileName, List<String> listName) throws IOException {
+    public  synchronized void setSaveFile(String fileName, List<String> listName) throws IOException {
         File fileDir = new File("Program Files\\" + fileName + ".txt");
         Writer out = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(fileDir), StandardCharsets.UTF_8));
@@ -34,13 +33,4 @@ public class SaveFile {
         fr.close();
     }
 
-    public synchronized void writeAccountFile(String fileContents) throws IOException {
-
-        String filePath = "Program Files\\account.txt";
-        FileWriter writer = new FileWriter(filePath);
-        writer.append(fileContents);
-        writer.flush();
-        writer.close();
-
-    }
 }

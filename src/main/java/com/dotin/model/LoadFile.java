@@ -15,7 +15,7 @@ public class LoadFile {
     }
 
 
-    public synchronized List<AccountDTO> getAccountList() throws IOException {
+    public synchronized   List<AccountDTO> getAccountList() throws IOException {
         List<AccountDTO> accountList = new ArrayList<>();
         List<String> accountListString = new ArrayList<>();
         String[] accountString;
@@ -161,18 +161,6 @@ public class LoadFile {
 
     }
 
-    public synchronized String readAccountFile() throws FileNotFoundException {
-
-        String filePath = "Program Files\\account.txt";
-        Scanner sc = new Scanner(new File(filePath));
-        StringBuilder buffer = new StringBuilder();
-        while (sc.hasNextLine()) {
-            buffer.append(sc.nextLine()).append(System.lineSeparator());
-        }
-        String s = buffer.toString();
-        sc.close();
-        return s;
-    }
 }
 
 

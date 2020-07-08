@@ -10,6 +10,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 public class Main {
     public static final Logger logger = Logger.getLogger(Main.class);
 
@@ -32,7 +33,6 @@ public class Main {
             int batchSize = ((int) Math.ceil(payList.size() / coreCpuCout));
             CountDownLatch minlatch = new CountDownLatch(payList.size() - 1);
             CountDownLatch batchlatch = new CountDownLatch(batchSize);
-            System.out.println("Proccess start!!!");
 
             for (int i = 0; i < payList.size(); i++) {
                 if (payList.size() > coreCpuCout) {
@@ -43,8 +43,6 @@ public class Main {
                                 service.execute(new PaymentThread(payList.get(0).getDepositNumber()
                                         , payList.get(batchSize * i + j).getDepositNumber()
                                         , payList.get(batchSize * i + j).getAmount(), batchlatch));
-
-
                             }
                         }
                     }
@@ -56,14 +54,11 @@ public class Main {
                                 , payList.get(i).getDepositNumber()
                                 , payList.get(i).getAmount(), minlatch));
 
-
                     }
                 }
 
             }
-            System.out.println("Proccess finished!!!");
             service.shutdown();
-
 
         } catch (Exception e) {
 
