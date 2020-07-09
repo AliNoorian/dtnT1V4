@@ -1,5 +1,4 @@
 com\dotin\beans\TransactionDTO.class
-com\dotin\service\MakePayment.class
 com\dotin\exception\LowDepositAmount.class
 com\dotin\service\PaymentThread.class
 com\dotin\exception\CanNotOpenFile.class

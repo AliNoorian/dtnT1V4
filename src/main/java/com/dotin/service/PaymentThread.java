@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 
 public class PaymentThread implements Runnable {
@@ -24,22 +23,20 @@ public class PaymentThread implements Runnable {
     private final BigDecimal amount;
 
 
-    private final CountDownLatch latch;
     private boolean isNegativeDeptorAmount;
 
 
     public PaymentThread(String deptorDepositNumber
             , String creditorDepositNumber
-            , BigDecimal amount
-            , CountDownLatch latch) {
+            , BigDecimal amount) {
         this.deptorDepositNumber = deptorDepositNumber;
         this.creditorDepositNumber = creditorDepositNumber;
         this.amount = amount;
-        this.latch = latch;
     }
 
 
     public synchronized void doThreadPay() throws IOException {
+
         List<String> fileContent = new ArrayList<>(Files.readAllLines(Paths.get(
                 "Program Files\\account.txt"), StandardCharsets.UTF_8));
 
@@ -57,6 +54,7 @@ public class PaymentThread implements Runnable {
                 break;
             }
         }
+
         for (int i = 0; i < fileContent.size(); i++) {
             if (fileContent.get(i).contains(creditorDepositNumber)) {
                 AccountDTO creditorAccount = new AccountDTO();
@@ -79,21 +77,16 @@ public class PaymentThread implements Runnable {
             SaveFile saveFile = new SaveFile();
             saveFile.setSaveFileWithAppend("transaction", transactionString);
         }
-        latch.countDown();
     }
 
     @Override
-    public synchronized void run() {
+    public void run() {
         try {
             doThreadPay();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
 }

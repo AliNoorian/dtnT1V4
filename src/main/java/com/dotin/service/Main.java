@@ -6,10 +6,7 @@ import com.dotin.model.LoadFile;
 import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import java.util.concurrent.*;
 
 public class Main {
     public static final Logger logger = Logger.getLogger(Main.class);
@@ -31,34 +28,41 @@ public class Main {
 
             //get size of task for thread
             int batchSize = ((int) Math.ceil(payList.size() / coreCpuCout));
-            CountDownLatch minlatch = new CountDownLatch(payList.size() - 1);
-            CountDownLatch batchlatch = new CountDownLatch(batchSize);
-
+            System.out.println("Proccess started!!!");
             for (int i = 0; i < payList.size(); i++) {
                 if (payList.size() > coreCpuCout) {
+
                     for (int j = 0; j < batchSize; j++) {
                         if (payList.size() > batchSize * i + j) {
                             if (payList.get(batchSize * i + j).getDeptorOrCreditor().equals("creditor")) {
 
-                                service.execute(new PaymentThread(payList.get(0).getDepositNumber()
+
+                                service.submit(new PaymentThread(payList.get(0).getDepositNumber()
                                         , payList.get(batchSize * i + j).getDepositNumber()
-                                        , payList.get(batchSize * i + j).getAmount(), batchlatch));
+                                        , payList.get(batchSize * i + j).getAmount()));
+
+                                service.awaitTermination(70, TimeUnit.MILLISECONDS);
                             }
                         }
+
                     }
+
                 } else {
 
                     if (payList.get(i).getDeptorOrCreditor().equals("creditor")) {
 
-                        service.execute(new PaymentThread(payList.get(0).getDepositNumber()
+                        service.submit(new PaymentThread(payList.get(0).getDepositNumber()
                                 , payList.get(i).getDepositNumber()
-                                , payList.get(i).getAmount(), minlatch));
+                                , payList.get(i).getAmount()));
 
+                        service.awaitTermination(70, TimeUnit.MILLISECONDS);
                     }
                 }
 
             }
+
             service.shutdown();
+            System.out.println("Proccess finished!!!");
 
         } catch (Exception e) {
 
