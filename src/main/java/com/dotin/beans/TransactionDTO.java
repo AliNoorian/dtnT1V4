@@ -6,10 +6,24 @@ import java.math.BigDecimal;
 public class TransactionDTO implements Serializable {
 
 
-    private final String debtorDepositNumber;
-    private final String creditorDepositNumber;
-    private final BigDecimal amount;
+    private  String debtorDepositNumber;
+    private  String creditorDepositNumber;
+    private  BigDecimal amount;
 
+    public void setDebtorDepositNumber(String debtorDepositNumber) {
+        this.debtorDepositNumber = debtorDepositNumber;
+    }
+
+    public void setCreditorDepositNumber(String creditorDepositNumber) {
+        this.creditorDepositNumber = creditorDepositNumber;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public TransactionDTO() {
+    }
 
     public TransactionDTO(String debtorDepositNumber, String creditorDepositNumber, BigDecimal amount) {
         this.debtorDepositNumber = debtorDepositNumber;

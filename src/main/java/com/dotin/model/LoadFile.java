@@ -15,7 +15,7 @@ public class LoadFile {
     }
 
 
-    public synchronized   List<AccountDTO> getAccountList() throws IOException {
+    public synchronized List<AccountDTO> getAccountList() throws IOException {
         List<AccountDTO> accountList = new ArrayList<>();
         List<String> accountListString = new ArrayList<>();
         String[] accountString;
@@ -44,27 +44,19 @@ public class LoadFile {
 
         } catch (Throwable t) {
 
-            ArrayList<Integer> numbers = new ArrayList<>();
             AccountDTO newAccount = new AccountDTO();
             AccountDTO newAccount2 = new AccountDTO();
 
             String randomDepositNumber1 = "1.10.100.1";
             newAccount2.setDepositNumber(randomDepositNumber1);
-            BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(9000) + 1000));
+            BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(100000) + 10000));
             newAccount2.setAmount(bigDecimal2);
             accountList.add(newAccount2);
             accountListString.add(newAccount2.toString() + "\n");
 
-            int number = (rand.nextInt(200));
-            numbers.add(number);
+            for (int i = 0; i < 1000; i++) {
 
-            int accountLoopLength = (rand.nextInt(100));
-            for (int i = 0; i <= accountLoopLength; i++) {
-                do {
-                    number = (rand.nextInt(200));
-                } while (numbers.contains(number));
-                numbers.add(number);
-                String randomDepositNumber2 = "1.20.100." + number;
+                String randomDepositNumber2 = "1.20.100." + i;
                 Optional<AccountDTO> first = accountList.stream()
                         .filter(x -> Objects.equals(randomDepositNumber2, x.getDepositNumber()))
                         .findFirst();
@@ -116,43 +108,33 @@ public class LoadFile {
 
         } catch (Throwable t) {
 
-            ArrayList<Integer> numbers2 = new ArrayList<>();
+
             PaymentDTO newPayment = new PaymentDTO();
             PaymentDTO newPayment2 = new PaymentDTO();
 
             String randomDepositNumber1 = "1.10.100.1";
             newPayment2.setDeptorOrCreditor("deptor");
             newPayment2.setDepositNumber(randomDepositNumber1);
-            BigDecimal bigDecimal2 = new BigDecimal((rand.nextInt(9000) + 1000));
+            BigDecimal bigDecimal2 = new BigDecimal(0);
             newPayment2.setAmount(bigDecimal2);
-            paymentList.add(newPayment2);
             paymentListString.add(newPayment2.toString() + "\n");
 
-            int number2 = (rand.nextInt(200));
-            numbers2.add(number2);
+            for (int i = 1; i < 1000; i++) {
 
-            int accountLoopLength = (rand.nextInt(20));
-            for (int i = 0; i <= accountLoopLength; i++) {
+                String randomPayDepositNumber = "1.20.100." + i;
+                newPayment.setDeptorOrCreditor("creditor");
+                newPayment.setDepositNumber(randomPayDepositNumber);
+                BigDecimal bigDecimal = new BigDecimal((rand.nextInt(40) + 10));
+                newPayment.setAmount(bigDecimal);
+                bigDecimal2=bigDecimal2.add(bigDecimal) ;
+                //System.out.println(bigDecimal);
+                paymentList.add(newPayment);
+                paymentListString.add(newPayment.toString() + "\n");
 
-                do {
-                    number2 = (rand.nextInt(200));
-                } while (numbers2.contains(number2));
-                numbers2.add(number2);
-                String randomPayDepositNumber = "1.20.100." + number2;
-
-                Optional<PaymentDTO> first = paymentList.stream()
-                        .filter(x -> Objects.equals(randomPayDepositNumber, x.getDepositNumber()))
-                        .findFirst();
-                if (!(first.isPresent())) {
-                    newPayment.setDeptorOrCreditor("creditor");
-                    newPayment.setDepositNumber(randomPayDepositNumber);
-                    BigDecimal bigDecimal = new BigDecimal((rand.nextInt(40) + 10));
-                    newPayment.setAmount(bigDecimal);
-                    paymentList.add(newPayment);
-                    paymentListString.add(newPayment.toString() + "\n");
-                }
             }
-
+            newPayment2.setAmount(bigDecimal2);
+            paymentListString.add(0,newPayment2.toString() + "\n");
+            paymentListString.remove(1);
             SaveFile saveFile = new SaveFile();
             saveFile.setSaveFile("pay", paymentListString);
             return paymentList;
