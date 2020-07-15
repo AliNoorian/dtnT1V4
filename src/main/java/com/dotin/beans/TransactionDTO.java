@@ -6,9 +6,9 @@ import java.math.BigDecimal;
 public class TransactionDTO implements Serializable {
 
 
-    private  String debtorDepositNumber;
-    private  String creditorDepositNumber;
-    private  BigDecimal amount;
+    private String debtorDepositNumber;
+    private String creditorDepositNumber;
+    private BigDecimal amount;
 
     public void setDebtorDepositNumber(String debtorDepositNumber) {
         this.debtorDepositNumber = debtorDepositNumber;
@@ -34,7 +34,7 @@ public class TransactionDTO implements Serializable {
 
 
     @Override
-    public  String toString() {
-        return debtorDepositNumber + "\t" + creditorDepositNumber + "\t" + amount ;
+    public String toString() {
+        return debtorDepositNumber + "\t" + creditorDepositNumber + "\t" + amount + "\n";
     }
 }

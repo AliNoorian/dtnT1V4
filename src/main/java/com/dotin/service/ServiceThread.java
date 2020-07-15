@@ -2,7 +2,6 @@ package com.dotin.service;
 
 import com.dotin.beans.PaymentDTO;
 import com.dotin.model.LoadFile;
-import com.dotin.model.SaveFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,8 +25,6 @@ public class ServiceThread {
 
     public CountDownLatch threadExecutor() throws IOException {
 
-        SaveFile saveFile = new SaveFile();
-
         int coreCpuCout = Runtime.getRuntime().availableProcessors();
         AtomicReference<ExecutorService> service = new AtomicReference<>(Executors.newFixedThreadPool(coreCpuCout));
 
@@ -36,8 +33,9 @@ public class ServiceThread {
         int payTaskLineBatch = 100;
         int taskCount = (int) Math.ceil(totalPaymentLines / payTaskLineBatch);
         CountDownLatch latch = new CountDownLatch(taskCount);
-        List<String> fileContent = new ArrayList<>(Files.readAllLines(Paths.get(
+        List<String> accountlist = new ArrayList<>(Files.readAllLines(Paths.get(
                 "Program Files\\account.txt"), StandardCharsets.UTF_8));
+
 
         int startLine = 0;
         int endLine;
@@ -52,9 +50,8 @@ public class ServiceThread {
 
         for (int i = 0; i < taskCount; i++) {
 
-            Runnable task = new PaymentThread(fileContent,
-                    saveFile, payList,
-                    startLine, endLine, latch);
+            Runnable task = new PaymentThread(accountlist,
+                    payList, startLine, endLine, latch);
 
             service.get().execute(task);
 
@@ -71,8 +68,6 @@ public class ServiceThread {
 
         return latch;
     }
-
-
 
 
 }

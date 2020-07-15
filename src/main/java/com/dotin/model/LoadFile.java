@@ -137,6 +137,7 @@ public class LoadFile {
             paymentListString.remove(1);
             SaveFile saveFile = new SaveFile();
             saveFile.setSaveFile("pay", paymentListString);
+            saveFile.saveFile("transaction");
             return paymentList;
 
         }
