@@ -27,6 +27,10 @@ public class Main {
             if (loadfile.getPaymentList().isEmpty()) {
                 loadfile.getPaymentList();
             }
+            if (loadfile.getTransaction().isEmpty()) {
+                loadfile.getTransaction();
+            }
+
             List<PaymentDTO> payList = loadfile.getPaymentList();
             List<AccountDTO> accountList = loadfile.getAccountList();
 

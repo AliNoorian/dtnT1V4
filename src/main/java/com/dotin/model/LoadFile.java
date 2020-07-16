@@ -126,20 +126,40 @@ public class LoadFile {
                 newPayment.setDepositNumber(randomPayDepositNumber);
                 BigDecimal bigDecimal = new BigDecimal((rand.nextInt(40) + 10));
                 newPayment.setAmount(bigDecimal);
-                bigDecimal2=bigDecimal2.add(bigDecimal) ;
+                bigDecimal2 = bigDecimal2.add(bigDecimal);
                 //System.out.println(bigDecimal);
                 paymentList.add(newPayment);
                 paymentListString.add(newPayment.toString() + "\n");
 
             }
             newPayment2.setAmount(bigDecimal2);
-            paymentListString.add(0,newPayment2.toString() + "\n");
+            paymentListString.add(0, newPayment2.toString() + "\n");
             paymentListString.remove(1);
             SaveFile saveFile = new SaveFile();
             saveFile.setSaveFile("pay", paymentListString);
-            saveFile.saveFile("transaction");
             return paymentList;
 
+        }
+
+    }
+
+    public synchronized String getTransaction() throws IOException {
+        try {
+            File fileDir = new File("Program Files\\transaction.txt");
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            new FileInputStream(fileDir), StandardCharsets.UTF_8));
+            String str;
+            str = in.readLine();
+            in.close();
+            return str;
+
+        } catch (Throwable t) {
+
+            SaveFile saveFile = new SaveFile();
+            saveFile.saveFile("transaction");
+
+            return "Transaction Created!!!";
         }
 
     }
