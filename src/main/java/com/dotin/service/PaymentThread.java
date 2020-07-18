@@ -1,6 +1,5 @@
 package com.dotin.service;
 
-
 import com.dotin.beans.AccountDTO;
 import com.dotin.beans.PaymentDTO;
 import com.dotin.beans.TransactionDTO;
@@ -13,10 +12,8 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-
 public class PaymentThread implements Runnable {
-    public static final Logger logger = Logger.getLogger(Main.class);
-
+    private static final Logger logger = Logger.getLogger(Main.class);
 
     private final CountDownLatch latch;
     private final int startLine;
@@ -25,18 +22,14 @@ public class PaymentThread implements Runnable {
     private boolean isFileUpdate = false;
     private final List<String> accountlist;
 
-    public PaymentThread(List<String> accountlist
-            , List<PaymentDTO> paymentList
-            , int startLine
-            , int endLine
-            , CountDownLatch latch) {
+    public PaymentThread(List<String> accountlist, List<PaymentDTO> paymentList, int startLine, int endLine,
+            CountDownLatch latch) {
         this.paymentList = paymentList;
         this.startLine = startLine;
         this.endLine = endLine;
         this.latch = latch;
         this.accountlist = accountlist;
     }
-
 
     public synchronized void doThreadPay() throws IOException {
         TransactionDTO newTransaction = new TransactionDTO();
@@ -51,7 +44,6 @@ public class PaymentThread implements Runnable {
                 deptorAccount.setAmount(bd.subtract(payment.getAmount()));
                 accountlist.set(0, deptorAccount.toString());
                 isFileUpdate = true;
-
 
             }
             if (payment.getDeptorOrCreditor().equals("creditor")) {
@@ -72,20 +64,17 @@ public class PaymentThread implements Runnable {
             }
             if (isFileUpdate) {
                 if (!(newTransaction.toString().contains("null\tnull\tnull"))) {
-                    Files.write(Paths.get("Program Files\\transaction.txt")
-                            , newTransaction.toString().getBytes(), StandardOpenOption.APPEND);
+                    Files.write(Paths.get("Program Files\\transaction.txt"), newTransaction.toString().getBytes(),
+                            StandardOpenOption.APPEND);
                 }
             }
         }
         if (isFileUpdate) {
 
-            Files.write(Paths.get(
-                    "Program Files\\account.txt"),
-                    accountlist, StandardCharsets.UTF_8);
+            Files.write(Paths.get("Program Files\\account.txt"), accountlist, StandardCharsets.UTF_8);
 
         }
     }
-
 
     @Override
     public void run() {
